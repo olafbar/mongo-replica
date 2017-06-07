@@ -1,0 +1,54 @@
+version: '2'
+networks:
+    cluster:
+        external:
+            name: cluster
+
+services:
+    mongo-1-1:
+        container_name: "mongo-1-1"
+        image: mongo
+# port na hoscie 30012
+        ports:
+            - "27011:27017"
+# ${DATA_DIR} w zewnętrznym pliku .env : 
+        volumes:
+            - "${DATA_DIR1}/db11:/data/db"
+        networks:
+           cluster:
+              aliases:
+                 - mongo-1-1
+# command zastępuje startową komende zdefiniowną w obrazie mongo
+        command: mongod --replSet rs1 --shardsvr --port 27017 --nojournal --oplogSize 16 --noprealloc --smallfiles
+        restart: always
+
+    mongo-1-2:
+        container_name: "mongo-1-2"
+        image: mongo
+        ports:
+            - "27012:27017"
+        volumes:
+            - "${DATA_DIR1}/db12:/data/db"
+        networks:
+           cluster:
+              aliases:
+                 - mongo-1-2
+# command zastępuje startową komende zdefiniowną w obrazie mongo
+        command: mongod --replSet rs1 --shardsvr --port 27017 --nojournal --oplogSize 16 --noprealloc --smallfiles
+        restart: always
+
+    mongo-1-3:
+        container_name: "mongo-1-3"
+        image: mongo
+        ports:
+            - "27013:27017"
+        volumes:
+            - "${DATA_DIR1}/db13:/data/db"
+        networks:
+           cluster:
+              aliases:
+                 - mongo-1-3
+# command zastępuje startową komende zdefiniowną w obrazie mongo
+        command: mongod --replSet rs1 --shardsvr --port 27017 --nojournal --oplogSize 16 --noprealloc --smallfiles
+        restart: always
+
